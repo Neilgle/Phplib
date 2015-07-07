@@ -61,9 +61,28 @@
             return $img; //base64编码图片
         }
 
+        /**
+         * [FromBase64 将图片解码成相应格式]
+         */
+        public function FromBase64($string, $name = "demo", $output = '') {
+            // echo $string;
+            if(mb_substr($string, 0, 4) == 'data'){
+                $ex = explode(';', $string);
+                $type = mb_substr($ex[0], 11);
+                $string = mb_substr($ex[1], 7);
+            }else{
+                $type = 'jpg';
+            }
+
+            $file_content = base64_decode($string); //base64编码
+
+            file_put_contents($output.$name.'.'.$type, $file_content);
+        }
+
         public static function fopen(){
             self::$fp = fopen(self::$file, "r") or die("Can't open file");
             self::$data = fread(self::$fp,filesize(self::$file));
+            return self::$data;
         }
 
         public static function fclose(){
@@ -87,4 +106,11 @@
 
     }
 
-    testToBase64();
+    function testFromBase64(){
+        $img = new Img();
+        $data = $img->FromBase64( file_get_contents('../src/img/base64img.txt'), 'demo', '../src/img/' );
+
+    }
+
+    // testToBase64();
+    testFromBase64();
