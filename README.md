@@ -1,2 +1,2 @@
 # Phplib
-learn php
+for php
